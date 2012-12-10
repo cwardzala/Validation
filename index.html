@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>validate.js</title>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+	<body>
+
+		<form action="">
+			<input id="test" name="test" required data-rules="test foo bar">
+			<input type="email" name="test2" id="test2">
+            <input type="radio" name="radio" id="radio" required>
+            <select name="select" required>
+                <option value="">Select an option</option>
+                <option value="first">first</option>
+            </select>
+            <input name="number" type="number" required id="number">
+			<button type="submit">Test</button>
+		</form>
+
+        <form action="">
+            <div class="control-group">
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="control-group">
+                <input type="email" name="email" id="email">
+            </div>
+            <div class="control-group">
+                <select name="age" required>
+                    <option value="">Select an option</option>
+                    <option value="first">21-30</option>
+                </select>
+            </div>
+            <button class="btn" type="submit">Test</button>
+        </form>
+
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="validate.js"></script>
+		<script>
+            validate.m.fail = function (opts) {
+                opts = $.extend({
+                    errorClass: 'error',
+                    errorScope: '.control-group'
+                }, opts);
+
+                // bail if the form is valid
+                if (this.formData.status) { return this; }
+
+                var fields = this.formData.fields;
+                for (var field in fields) {
+                    if (fields.hasOwnProperty(field)) {
+                        if (!fields[field].status) {
+                            $('#'+field + ',[name="' + field + '"]').closest(opts.errorScope).eq(0).addClass(opts.errorClass);
+                        } else {
+                            $('#'+field + ',[name="' + field + '"]').closest(opts.errorScope).eq(0).removeClass(opts.errorClass);
+                        }
+                    }
+                }
+                return this;
+            };
+
+            validate.helpers.disableHTML5Validation();
+
+			$(document).on('submit', 'form', function (event) {
+				var val = validate($(event.currentTarget)).fail();
+                console.log(val);
+				return val.formData.status;
+			});
+		</script>
+	</body>
+</html>
