@@ -128,4 +128,8 @@
     window.rules = rules;
 	window.validate = validate;
 
+    if (typeof define === "function" && define.amd) {
+        define(function () { return validate; });
+    }
+
 })(window);
